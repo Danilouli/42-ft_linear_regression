@@ -3,15 +3,17 @@
 --                                                        :::      ::::::::   --
 --   linear_regression.hs                               :+:      :+:    :+:   --
 --                                                    +:+ +:+         +:+     --
---   By: daniel <daniel@student.42.fr>              +#+  +:+       +#+        --
+--   By: danilouli <danilouli@student.42.fr>        +#+  +:+       +#+        --
 --                                                +#+#+#+#+#+   +#+           --
 --   Created: 2020/01/30 18:42:41 by danilouli         #+#    #+#             --
---   Updated: 2020/02/06 15:20:33 by daniel           ###   ########.fr       --
+--   Updated: 2020/02/07 10:27:17 by danilouli        ###   ########.fr       --
 --                                                                            --
 -- ************************************************************************** --
 
 import Text.CSV
 import Text.Read
+import Debug.Trace
+import Data.Function.Memoize
 
 parseData :: [Record] -> [[Float]]
 parseData [] = []
@@ -25,7 +27,7 @@ splitData :: [[Float]] -> ([Float],[Float])
 splitData xs = (map (\xxs -> xxs!!0) xs, map (\xxs -> xxs!!1) xs) 
 
 mean :: [Float] -> Float
-mean xs = (sum xs)/(fromIntegral(length xs))
+mean xs = trace ("calling mean") (sum xs)/(fromIntegral(length xs))
 
 covariance :: ([Float], [Float]) -> Float
 covariance (xs,ys) = sum [(x - x_)*(y - y_) | x <- xs, y <- ys]
