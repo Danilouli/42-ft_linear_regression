@@ -6,7 +6,7 @@
 --   By: danilouli <danilouli@student.42.fr>        +#+  +:+       +#+        --
 --                                                +#+#+#+#+#+   +#+           --
 --   Created: 2020/01/30 18:42:41 by danilouli         #+#    #+#             --
---   Updated: 2020/03/06 16:16:02 by danilouli        ###   ########.fr       --
+--   Updated: 2020/03/06 16:29:07 by danilouli        ###   ########.fr       --
 --                                                                            --
 -- ************************************************************************** --
 
@@ -70,32 +70,28 @@ thetaCoupleKH (xs,ys) = (intereceptKH(xs,ys), correlationKH(xs,ys))
 scaleX :: [Float] -> [Float]
 scaleX xs = map (\x -> (x - minimum xs)/((maximum xs) - (minimum xs))) xs
 
-sumContentTheta0 :: (Float, Float, [(Float, Float)]) -> [Float]
-sumContentTheta0 (t0, t1, zipped) = map (\(x,y)->(t0 + t1*x - y)) (zipped)
-
-sumContentTheta1 :: (Float, Float, [(Float, Float)]) -> [Float]
-sumContentTheta1 (t0, t1, zipped) = map (\(x,y)->((t0 + t1*x - y)*x)) (zipped)
-
 mt0 :: ([(Float,Float)], Float) -> (Int -> Float)
 mt0(z,m) = (map (t0(z,m)) [0 ..] !!)
     where   t0(z,m) 0 = 0
-            t0(z,m) n = t0n_1 - (1/m)*sum(sumContentTheta0(t0n_1, t1n_1, z))
-                where   t0n_1 = (mt0(z,m)) (n-1)
-                        t1n_1 = (mt1(z,m)) (n-1)
+            t0(z,m) n = t0 - (1/m)*scont
+                where   t0 = (mt0(z,m)) (n-1)
+                        t1 = (mt1(z,m)) (n-1)
+                        scont = sum (map (\(x,y)->(t0 + t1*x - y)) z)
 
 mt1 :: ([(Float,Float)], Float) -> (Int -> Float)
 mt1(z,m) = (map (t1(z,m)) [0 ..] !!)
     where   t1(z,m) 0 = 0
-            t1(z,m) n = t1n_1 - (1/m)*sum(sumContentTheta1(t0n_1, t1n_1, z))
-                where   t0n_1 = (mt0(z,m)) (n-1)
-                        t1n_1 = (mt1(z,m)) (n-1)
+            t1(z,m) n = t1 - (1/m)*scont
+                where   t0 = (mt0(z,m)) (n-1)
+                        t1 = (mt1(z,m)) (n-1)
+                        scont = sum(map (\(x,y)->((t0 + t1*x - y)*x)) z)
 
 uglyCouple :: ([Float], [Float]) -> (Float, Float)
-uglyCouple (xs,ys) = ((mt1f 10)/((maximum xs) - (minimum xs)), mt0f 10)
+uglyCouple (xs,ys) = ((mt1f 0)/((maximum xs) - (minimum xs)), mt0f 30)
     where m = fromIntegral(length xs)
           zipped = zip (scaleX xs) ys
           mt1f = mt1(zipped, m)
-          mt0f = mt0(zipped, m)
+          mt0f = memoize (mt0(zipped, m))
 
 allCouples :: ([Float], [Float]) -> [(Float,Float)]
 allCouples (xs,ys) = [thetaCoupleKH(xs,ys), thetaCouple(xs,ys), uglyCouple(xs,ys)]
