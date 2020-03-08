@@ -1,0 +1,11 @@
+{
+  "name": "ft_linear_regression",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Danilouli/ft_linear_regression.git",
+  "author": "Daniel Saadia <dsaadia@student.42.fr>",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
+}
