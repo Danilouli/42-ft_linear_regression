@@ -6,7 +6,7 @@
 --   By: danilouli <danilouli@student.42.fr>        +#+  +:+       +#+        --
 --                                                +#+#+#+#+#+   +#+           --
 --   Created: 2020/01/30 18:42:41 by danilouli         #+#    #+#             --
---   Updated: 2020/03/09 13:00:23 by danilouli        ###   ########.fr       --
+--   Updated: 2020/03/09 17:18:31 by danilouli        ###   ########.fr       --
 --                                                                            --
 -- ************************************************************************** --
 
@@ -98,9 +98,8 @@ allCouples :: ([Float], [Float]) -> [[Float]]
 allCouples (xs,ys) = map (\(x,y)->[x,y]) [uglyCouple(xs,ys,1000,1), thetaCouple(xs,ys), thetaCoupleKH(xs,ys)]
 
 writeModel m = writeFile "model.json" (show m)
-
-handleError csv = putStrLn "Error Parsing CSV File"
 modelize csv = (writeModel.allCouples.splitData.parseData.tail) csv
+handleError csv = putStrLn "Error Parsing CSV File"
 
 main :: IO ()
 main = do
